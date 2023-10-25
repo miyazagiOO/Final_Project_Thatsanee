@@ -1,0 +1,49 @@
+.App {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2rem;
+}
+
+.col {
+    border: 1px solid #333;
+    padding: 2rem;
+    border-radius: 0%;
+}
+
+img {
+    width: 100%;
+}
+/* เพิ่มสีพื้นหลังสำหรับตาราง */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #3498db; /* สีฟ้า */
+    color: #fff; /* สีข้อความในตาราง */
+    text-align: left;
+  }
+  
+  /* เพิ่มสีพื้นหลังแถวหัวตาราง */
+  th {
+    background-color: #2980b9; /* สีส้มเข้ม */
+  }
+  
+  /* เพิ่มสีพื้นหลังแถวข้อมูล */
+  tr:nth-child(odd) {
+    background-color: #3498db; /* สีเขียวอ่อน */
+  }
+  
+  /* เพิ่มสีพื้นหลังแถวข้อมูลเมื่อเมาส์ชี้ */
+  tr:hover {
+    background-color: #2574a9; /* สีม่วง */
+  }
+  
+  /* เพิ่มเส้นขอบรอบตารางและเซลล์ */
+  table, th, td {
+    border: 1px solid #fff; /* สีขอบในสีขาว */
+    padding: 8px;
+  }
