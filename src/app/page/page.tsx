@@ -39,22 +39,19 @@ export default function App() {
   }, []);
 
   const handleIncrement = (index: number) => {
-    setData((prevData) => {
-      const newData = [...prevData];
-      newData[index] = { ...newData[index], count: newData[index].count + 1 };
-      return newData;
-    });
+    const newData = [...data];
+    newData[index] = { ...newData[index], count: newData[index].count + 1 };
+    setData(newData);
   };
-
+  
   const handleReduce = (index: number) => {
-    setData((prevData) => {
-      const newData = [...prevData];
-      if (newData[index].count > 0) {
-        newData[index] = { ...newData[index], count: newData[index].count - 1 };
-      }
-      return newData;
-    });
-  };
+    if (data[index].count > 0) {
+      const newData = [...data];
+      newData[index] = { ...newData[index], count: newData[index].count - 1 };
+      setData(newData);
+    };
+  }
+  
 
   const handleAdd = (index: number) => {
     const selectedItem = data[index];
@@ -63,8 +60,13 @@ export default function App() {
 
   const handleEdit = (index: number) => {
     setEditIndex(index);
-    setFormData(addedItems[index]);
+    // ดึงข้อมูลจำนวนเดิมจาก addedItems
+    const previousCount = addedItems[index].count;
+    // ตั้งค่า formData ด้วยข้อมูลจำนวนเดิม
+    setFormData({ ...addedItems[index], count: previousCount });
   };
+  
+    
 
   const handleSaveEdit = () => {
     if (editIndex !== null) {
@@ -81,11 +83,20 @@ export default function App() {
       });
     }
   };
+  const handleReset = (index: number) => {
+    const newData = [...data];
+    newData[index] = { ...newData[index], count: 0 };
+    setData(newData);
+  }
+  
+
   const handleDelete = (index: number) => {
     const updatedItems = [...addedItems];
     updatedItems.splice(index, 1);
     setAddedItems(updatedItems);
   };
+
+  
 
   return (
     <div className="App">
@@ -94,13 +105,19 @@ export default function App() {
           <div key={idx} className="col">
             <h3>{val.name}</h3>
             <img src={val.Image} alt={val.name} width="200" height="200" />
-            {" | "}
             <span>{val.company}</span>
-
-            {/* ... (rest of your code) */}
+            <div className="item-actions">
+              <button onClick={() => handleIncrement(idx)}>+</button>
+              <span>{val.count}</span>
+              <button onClick={() => handleReduce(idx)}>-</button>
+              <button onClick={() => handleAdd(idx)}>เลือก</button>
+              <button onClick={() => handleReset(idx)}>Reset</button> 
+              
+            </div>
           </div>
         ))}
       </div>
+
       <div>
         <h2>รายการที่เพิ่ม</h2>
         <table>
@@ -109,19 +126,27 @@ export default function App() {
               <th>ลำดับ</th>
               <th>ชื่อสินค้า</th>
               <th>จำนวน</th>
-              <th>แก้ไข</th>
-              <th>ลบ</th>
             </tr>
           </thead>
           <tbody>
-            {addedItems.map((item, index) => (
+          {addedItems.map((item, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{item.itemname}</td>
-                <td>{item.count}</td>
+                <td>{item.name}</td>
                 <td>
                   {editIndex === index ? (
+                    // โหมดแก้ไข
                     <>
+                      <input
+                        type="number"
+                        value={formData.count}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            count: parseInt(e.target.value),
+                          })
+                        }
+                      />
                       <button
                         className="btn btn-primary btn-sm"
                         onClick={handleSaveEdit}
@@ -136,21 +161,24 @@ export default function App() {
                       </button>
                     </>
                   ) : (
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => handleEdit(index)}
-                    >
-                      แก้ไข
-                    </button>
+                    // โหมดแสดง
+                    <>
+                      {item.count}
+                    
+                      <button style={{margin: '10px'}}
+                        className="btn btn-primary btn-sm"
+                        onClick={() => handleEdit(index)}
+                      >
+                        แก้ไข
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(index)}
+                      >
+                        ลบ
+                      </button>
+                    </>
                   )}
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDelete(index)}
-                  >
-                    ลบ
-                  </button>
                 </td>
               </tr>
             ))}
